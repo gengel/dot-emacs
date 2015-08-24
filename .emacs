@@ -22,6 +22,7 @@
 (global-set-key (kbd "C-;") 'er/expand-region)
 
 (require 'yasnippet)
+(yas-global-mode 1)
 
 ;; Copy $PATH variables
 (require 'exec-path-from-shell)
@@ -31,33 +32,35 @@
 
 ;; Java
 ;; Check style of Java files.
-(require 'flymake)
-(add-hook 'find-file-hook 'flymake-find-file-hook)
-(defun flymake-java-init ()
-  (require 'flymake-cursor)
-  (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                     'flymake-create-temp-inplace))
-         (local-file (file-relative-name
-                      temp-file
-                      (file-name-directory buffer-file-name))))
-    (list "java"
-          (list "-cp"
-                (expand-file-name "~/Projects/CQ5/Tools/CheckStyle/checkstyle-5.7-all.jar")
-                "com.puppycrawl.tools.checkstyle.Main"
-                "-c"
-                (expand-file-name "~/Projects/CQ5/Tools/CheckStyle/slate_checkstyle.xml")
-                local-file))))
-(setq flymake-allowed-file-name-masks
-      (cons '(".+\\.java$"
-              flymake-java-init
-              flymake-simple-cleanup
-              flymake-get-real-file-name)
-            flymake-allowed-file-name-masks))
-(setq flymake-err-line-patterns
-      (cons '("\\(.*\\.java\\):\\([0-9]+\\):[0-9]+: \\(.+\\)" 1 2 nil 3)
-            flymake-err-line-patterns))
-;; Check *Message* buffer for errors. If you don't find any, you can remove this line.
-;;(setq flymake-log-level 3)
+;; (require 'flymake)
+;; (add-hook 'find-file-hook 'flymake-find-file-hook)
+;; (defun flymake-java-init ()
+;;   (require 'flymake-cursor)
+;;   (let* ((temp-file (flymake-init-create-temp-buffer-copy
+;;                      'flymake-create-temp-inplace))
+;;          (local-file (file-relative-name
+;;                       temp-file
+;;                       (file-name-directory buffer-file-name))))
+;;     (list "java"
+;;           (list "-cp"
+;;                 (expand-file-name "~/Projects/CQ5/Tools/CheckStyle/checkstyle-5.7-all.jar")
+;;                 "com.puppycrawl.tools.checkstyle.Main"
+;;                 "-c"
+;;                 (expand-file-name "~/Projects/CQ5/Tools/CheckStyle/slate_checkstyle.xml")
+;;                 local-file))))
+;; (setq flymake-allowed-file-name-masks
+;;       (cons '(".+\\.java$"
+;;               flymake-java-init
+;;               flymake-simple-cleanup
+;;               flymake-get-real-file-name)
+;;             flymake-allowed-file-name-masks))
+;; (setq flymake-err-line-patterns
+;;       (cons '("\\(.*\\.java\\):\\([0-9]+\\):[0-9]+: \\(.+\\)" 1 2 nil 3)
+;;             flymake-err-line-patterns))
+;; ;; Check *Message* buffer for errors. If you don't find any, you can remove this line.
+;; ;;(setq flymake-log-level 3)
+
+
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (customize-set-variable 'indent-tabs-mode nil)
@@ -112,17 +115,35 @@
           (lambda ()
             (progn
               (hs-minor-mode)
-              (flymake-mode)
+;              (flymake-mode)
               (local-set-key (kbd "C-z") 'hs-toggle-hiding)
               (local-set-key (kbd "C-x C-z") 'hs-hide-level)
               )))
 
-; JavaScript
+(add-hook 'scala-mode-hook
+          (lambda ()
+            (progn
+              (hs-minor-mode)
+              (local-set-key (kbd "C-z") 'hs-toggle-hiding)
+              )))
+;; JavaScript
 (setq js-indent-level 2)
 
-; More general variables
+;; Web Mode
+(defun my-web-mode-hook ()
+  "Hooks for Web mode."
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-code-indent-offset 2)
+  (setq web-mode-attr-indent-offset 2)
+)
+(add-hook 'web-mode-hook  'my-web-mode-hook)
+(add-to-list 'auto-mode-alist '("\\.hbs\\'" . web-mode))
+
+(set-variable 'auto-mode-alist (remove '("\\.hbs$" . handlebars-mode) auto-mode-alist))
+
+;; More general variables
 (tool-bar-mode -1)
-(when window-system (set-frame-size (selected-frame) 200 60))
+(when window-system (set-frame-size (selected-frame) 269 69))
 
 (global-set-key (kbd "C-c r") 'revert-buffer)
 
@@ -133,6 +154,8 @@
 (auto-fill-mode -1)
 
 (setq exec-path (cons "/opt/bin" (cons "/opt/local/bin" exec-path)))
+
+(setq js2-basic-offset 2)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -148,7 +171,15 @@
  '(default ((t (:inherit nil :stipple nil :background "Black" :foreground "White" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "nil" :family "Menlo")))))
 
 (require 'cider)
-(require 'company)
+;(require 'company)
+(require 'auto-complete)
+(require 'auto-complete-config)
+
+(require 'ensime)
+(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
+
+(add-to-list 'ac-dictionary-directories "~/.emacs.d//ac-dictionaries")
+(ac-config-default)
 (setq nrepl-hide-special-buffers t)
 (setq cider-repl-pop-to-buffer-on-connect nil)
 (setq cider-popup-stacktraces nil)
@@ -157,3 +188,39 @@
 (add-hook 'clojure-mode-hook 'turn-on-orgstruct)
 
 (ido-mode)
+
+(setq magit-last-seen-setup-instructions "1.4.0")
+
+(require 'simple-httpd)
+(setq httpd-root "~/src/")
+(setq httpd-port 8000)
+;(httpd-start)
+
+
+(global-set-key (kbd "C-z") 'hs-toggle-hiding)
+
+;(require 'crappy-jsp-mode)
+(load "~/.emacs.d/crappy-jsp-mode.el")
+(add-to-list 'auto-mode-alist '("\\.jsp\\'" . crappy-jsp-mode))
+
+(add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
+(set-variable 'css-indent-offset 2)
+
+(require 'eclim)
+(global-eclim-mode)
+(set-variable 'eclim-executable "/Applications/Eclipse.app/Contents/Eclipse/eclim")
+
+(defun reverse-words (beg end)
+  "Reverse the order of words in region."
+  (interactive "*r")
+  (apply
+   'insert
+   (reverse
+    (split-string
+     (delete-and-extract-region beg end) "\\b"))))
+
+(global-set-key (kbd "C-c <left>") 'reverse-words)
+
+;(load "~/.emacs.d/local/reddit.el")
+;(add-to-list 'load-path "/Users/engelg/.emacs.d/local/")
+;(require 'reddit)
