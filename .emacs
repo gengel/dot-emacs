@@ -30,35 +30,33 @@
   (exec-path-from-shell-initialize))
 
 
-;; Java
 ;; Check style of Java files.
-;; (require 'flymake)
-;; (add-hook 'find-file-hook 'flymake-find-file-hook)
-;; (defun flymake-java-init ()
-;;   (require 'flymake-cursor)
-;;   (let* ((temp-file (flymake-init-create-temp-buffer-copy
-;;                      'flymake-create-temp-inplace))
-;;          (local-file (file-relative-name
-;;                       temp-file
-;;                       (file-name-directory buffer-file-name))))
-;;     (list "java"
-;;           (list "-cp"
-;;                 (expand-file-name "~/Projects/CQ5/Tools/CheckStyle/checkstyle-5.7-all.jar")
-;;                 "com.puppycrawl.tools.checkstyle.Main"
-;;                 "-c"
-;;                 (expand-file-name "~/Projects/CQ5/Tools/CheckStyle/slate_checkstyle.xml")
-;;                 local-file))))
-;; (setq flymake-allowed-file-name-masks
-;;       (cons '(".+\\.java$"
-;;               flymake-java-init
-;;               flymake-simple-cleanup
-;;               flymake-get-real-file-name)
-;;             flymake-allowed-file-name-masks))
-;; (setq flymake-err-line-patterns
-;;       (cons '("\\(.*\\.java\\):\\([0-9]+\\):[0-9]+: \\(.+\\)" 1 2 nil 3)
-;;             flymake-err-line-patterns))
-;; ;; Check *Message* buffer for errors. If you don't find any, you can remove this line.
-;; ;;(setq flymake-log-level 3)
+(require 'flymake)
+(add-hook 'find-file-hook 'flymake-find-file-hook)
+(defun flymake-java-init ()
+  (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                     'flymake-create-temp-inplace))
+         (local-file (file-relative-name
+                      temp-file
+                      (file-name-directory buffer-file-name))))
+    (list "java"
+          (list "-cp"
+                (expand-file-name "~/misc/checkstyle-6.10.1-all.jar")
+                "com.puppycrawl.tools.checkstyle.Main"
+                "-c"
+                (expand-file-name "~/Projects/wp-java-checkstyle/src/main/resources/checkstyle.xml")
+                local-file))))
+(setq flymake-allowed-file-name-masks
+      (cons '(".+\\.java$"
+              flymake-java-init
+              flymake-simple-cleanup
+              flymake-get-real-file-name)
+            flymake-allowed-file-name-masks))
+(setq flymake-err-line-patterns
+      (cons '("\\(.*\\.java\\):\\([0-9]+\\):[0-9]+: \\(.+\\)" 1 2 nil 3)
+            flymake-err-line-patterns))
+;; Check *Message* buffer for errors. If you don't find any, you can remove this line.
+(setq flymake-log-level 3)
 
 
 
