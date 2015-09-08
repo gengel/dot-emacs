@@ -126,6 +126,16 @@
               (hs-minor-mode)
               (local-set-key (kbd "C-z") 'hs-toggle-hiding)
               )))
+
+(defun java-indent-setup ()
+  (progn
+    (c-set-offset 'arglist-intro '+)
+    (c-set-offset 'arglist-close 0)
+    )
+  )
+
+(add-hook 'java-mode-hook 'java-indent-setup)
+
 ;; JavaScript
 (setq js-indent-level 2)
 
@@ -135,15 +145,21 @@
   (setq web-mode-markup-indent-offset 2)
   (setq web-mode-code-indent-offset 2)
   (setq web-mode-attr-indent-offset 2)
+  (setq web-mode-enable-auto-closing nil)
 )
+
 (add-hook 'web-mode-hook  'my-web-mode-hook)
 (add-to-list 'auto-mode-alist '("\\.hbs\\'" . web-mode))
 
 (set-variable 'auto-mode-alist (remove '("\\.hbs$" . handlebars-mode) auto-mode-alist))
 
+;; XML Mode
+
+(set-variable 'nxml-child-indent 4)
+
 ;; More general variables
 (tool-bar-mode -1)
-(when window-system (set-frame-size (selected-frame) 269 69))
+(when window-system (set-frame-size (selected-frame) 177 54))
 
 (global-set-key (kbd "C-c r") 'revert-buffer)
 
@@ -190,6 +206,9 @@
 (ido-mode)
 
 (setq magit-last-seen-setup-instructions "1.4.0")
+(require 'magit-gh-pulls)
+(add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls)
+
 
 (require 'simple-httpd)
 (setq httpd-root "~/src/")
@@ -199,9 +218,12 @@
 
 (global-set-key (kbd "C-z") 'hs-toggle-hiding)
 
-;(require 'crappy-jsp-mode)
-(load "~/.emacs.d/crappy-jsp-mode.el")
+;;(require 'crappy-jsp-mode)
+(load "~/.emacs.d/local/crappy-jsp-mode/crappy-jsp-mode.el")
+
 (add-to-list 'auto-mode-alist '("\\.jsp\\'" . crappy-jsp-mode))
+(add-to-list 'auto-mode-alist '("\\.tag\\'" . crappy-jsp-mode))
+;;(add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
 
 (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
 (set-variable 'css-indent-offset 2)
@@ -224,3 +246,7 @@
 ;(load "~/.emacs.d/local/reddit.el")
 ;(add-to-list 'load-path "/Users/engelg/.emacs.d/local/")
 ;(require 'reddit)
+
+
+;;YASNippets
+(add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets/")
