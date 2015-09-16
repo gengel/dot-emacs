@@ -14,7 +14,10 @@
   (package-initialize)
   (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
   (add-to-list 'package-archives
-             '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
+               '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
+
+  ;;(add-to-list 'package-archives
+  ;;           '("marmalade" . "http://marmalade-repo.org/packages/"))
   )
 
 ;; Add some additonal modules
@@ -59,11 +62,8 @@
 (setq flymake-log-level 3)
 
 
-
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (customize-set-variable 'indent-tabs-mode nil)
-
-
 
 
  (defun java-mode-untabify ()
@@ -136,6 +136,7 @@
 
 ;; JavaScript
 (setq js-indent-level 2)
+(setq js2-basic-offset 2)
 
 ;; Web Mode
 (defun my-web-mode-hook ()
@@ -155,6 +156,28 @@
 
 (set-variable 'nxml-child-indent 4)
 
+;; Clojure
+
+(require 'cider)
+;(require 'company)
+(require 'auto-complete)
+(require 'auto-complete-config)
+
+(setq nrepl-hide-special-buffers t)
+(setq cider-repl-pop-to-buffer-on-connect nil)
+(setq cider-popup-stacktraces nil)
+(setq cider-repl-popup-stacktraces t)
+(setq org-babel-clojure-backend 'cider)
+(add-hook 'clojure-mode-hook 'turn-on-orgstruct)
+
+(show-paren-mode 1)
+
+(require 'ac-nrepl)
+(add-hook 'cider-mode-hook 'ac-nrepl-setup)
+(add-hook 'cider-repl-mode-hook 'ac-nrepl-setup)
+(add-to-list 'ac-modes 'cider-mode)
+(add-to-list 'ac-modes 'cider-repl-mode)
+
 ;; More general variables
 (tool-bar-mode -1)
 (when window-system (set-frame-size (selected-frame) 177 54))
@@ -169,7 +192,7 @@
 
 (setq exec-path (cons "/opt/bin" (cons "/opt/local/bin" exec-path)))
 
-(setq js2-basic-offset 2)
+
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -184,22 +207,13 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :stipple nil :background "Black" :foreground "White" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "nil" :family "Menlo")))))
 
-(require 'cider)
-;(require 'company)
-(require 'auto-complete)
-(require 'auto-complete-config)
+
 
 (require 'ensime)
 (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 
 (add-to-list 'ac-dictionary-directories "~/.emacs.d//ac-dictionaries")
 (ac-config-default)
-(setq nrepl-hide-special-buffers t)
-(setq cider-repl-pop-to-buffer-on-connect nil)
-(setq cider-popup-stacktraces nil)
-(setq cider-repl-popup-stacktraces t)
-(setq org-babel-clojure-backend 'cider)
-(add-hook 'clojure-mode-hook 'turn-on-orgstruct)
 
 (ido-mode)
 
@@ -225,6 +239,9 @@
 
 (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
 (set-variable 'css-indent-offset 2)
+
+(set-variable 'ac-ignore-case nil)
+
 
 (require 'eclim)
 (global-eclim-mode)
