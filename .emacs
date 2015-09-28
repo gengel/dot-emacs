@@ -158,6 +158,7 @@
 
 ;; Clojure
 
+(require 'spinner)
 (require 'cider)
 ;(require 'company)
 (require 'auto-complete)
@@ -218,8 +219,10 @@
 (ido-mode)
 
 (setq magit-last-seen-setup-instructions "1.4.0")
-(require 'magit-gh-pulls)
-(add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls)
+(global-set-key (kbd "C-x g") 'magit-status)
+;(require 'magit-gh-pulls)
+;(add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls)
+
 
 
 (require 'simple-httpd)
