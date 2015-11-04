@@ -12,13 +12,22 @@
 (when (>= emacs-major-version 24)
   (require 'package)
   (package-initialize)
-  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+  ;(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
   (add-to-list 'package-archives
                '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
 
-  ;;(add-to-list 'package-archives
-  ;;           '("marmalade" . "http://marmalade-repo.org/packages/"))
+  (add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
   )
+
+;(set-variable 'package-archives '())
+
+;; Add eshell function
+(defun eshell/clear ()
+  "Clear the eshell buffer."
+  (let ((inhibit-read-only t))
+    (erase-buffer)
+    (eshell-send-input)))
 
 ;; Add some additonal modules
 (require 'expand-region)
@@ -268,3 +277,5 @@
 
 ;;YASNippets
 (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets/")
+
+(set-variable 'flymake-gui-warnings-enabled nil)
