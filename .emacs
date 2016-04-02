@@ -147,6 +147,10 @@
 (setq js-indent-level 2)
 (setq js2-basic-offset 2)
 
+;; JSON
+
+(add-hook 'json-mode 'flymake-json-load)
+
 ;; Web Mode
 (defun my-web-mode-hook ()
   "Hooks for Web mode."
@@ -209,7 +213,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(magit-push-arguments (quote ("--set-upstream"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -229,9 +233,11 @@
 
 (setq magit-last-seen-setup-instructions "1.4.0")
 (global-set-key (kbd "C-x g") 'magit-status)
-;(require 'magit-gh-pulls)
-;(add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls)
+(require 'magit-gh-pulls)
+(add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls)
 
+(require 'magit-gitflow)
+(add-hook 'magit-mode-hook 'turn-on-magit-gitflow)
 
 
 (require 'simple-httpd)
@@ -247,6 +253,7 @@
 
 (add-to-list 'auto-mode-alist '("\\.jsp\\'" . crappy-jsp-mode))
 (add-to-list 'auto-mode-alist '("\\.tag\\'" . crappy-jsp-mode))
+(add-to-list 'auto-mode-alist '("\\.stache\\'" . web-mode))
 ;;(add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
 
 (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
@@ -279,3 +286,7 @@
 (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets/")
 
 (set-variable 'flymake-gui-warnings-enabled nil)
+
+
+;;Fireplace
+(load "~/.emacs.d/fireplace")
