@@ -2,6 +2,9 @@
 (global-set-key (kbd "C-z") nil)
 (global-set-key (kbd "C-x C-z") nil)
 
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+(setq exec-path (append exec-path '("/usr/local/bin")))
+
 ;; Backups
 (setq backup-directory-alist
       `((".*" . ,temporary-file-directory)))
@@ -146,22 +149,26 @@
 ;; JavaScript
 (setq js-indent-level 2)
 (setq js2-basic-offset 2)
+;(require 'flymake-jslint)
+(add-hook 'js-mode-hook 'flymake-jslint-load)
 
 ;; JSON
 
-(add-hook 'json-mode 'flymake-json-load)
+(add-hook 'json-mode-hook 'flymake-json-load)
+(global-set-key (kbd "C-c j v") 'flymake-json-load)
 
 ;; Web Mode
 (defun my-web-mode-hook ()
   "Hooks for Web mode."
-  (setq web-mode-markup-indent-offset 2)
-  (setq web-mode-code-indent-offset 2)
-  (setq web-mode-attr-indent-offset 2)
-  (setq web-mode-enable-auto-closing nil)
+  (set-variable 'web-mode-markup-indent-offset 2)
+  (set-variable 'web-mode-code-indent-offset 2)
+  (set-variable 'web-mode-attr-indent-offset 2)
+  (set-variable 'web-mode-enable-auto-closing nil)
 )
 
 (add-hook 'web-mode-hook  'my-web-mode-hook)
 (add-to-list 'auto-mode-alist '("\\.hbs\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.dust\\'" . web-mode))
 
 (set-variable 'auto-mode-alist (remove '("\\.hbs$" . handlebars-mode) auto-mode-alist))
 
@@ -196,7 +203,19 @@
 (tool-bar-mode -1)
 (when window-system (set-frame-size (selected-frame) 177 54))
 
+(defun delete-completion-window-buffer (&optional output)
+  (interactive)
+  (dolist (win (window-list))
+    (when (string= (buffer-name (window-buffer win)) "*Completions*")
+      (delete-window win)
+      (kill-buffer "*Completions*")))
+  output)
+
+(add-hook 'comint-preoutput-filter-functions 'delete-completion-window-buffer)
+
 (global-set-key (kbd "C-c r") 'revert-buffer)
+(global-set-key (kbd "C-c g") 'delete-completion-window-buffer)
+
 
 (customize-set-variable 'standard-indent 8)
 (customize-set-variable 'tab-width 4)
@@ -214,12 +233,17 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(magit-push-arguments (quote ("--set-upstream"))))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "Black" :foreground "White" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "nil" :family "Menlo")))))
+ '(default ((t
+             (:inherit nil :stipple nil :background "Black" :foreground "White"
+                       :inverse-video nil :box nil :strike-through nil :overline nil
+                       :underline nil :slant normal :weight normal :height 120 :width normal
+                       :foundry "nil" :family "Menlo")))))
 
 
 
@@ -250,6 +274,9 @@
 
 ;;(require 'crappy-jsp-mode)
 (load "~/.emacs.d/local/crappy-jsp-mode/crappy-jsp-mode.el")
+
+;;
+(load "~/.emacs.d/local/nodejs-repl.el/nodejs-repl.el")
 
 (add-to-list 'auto-mode-alist '("\\.jsp\\'" . crappy-jsp-mode))
 (add-to-list 'auto-mode-alist '("\\.tag\\'" . crappy-jsp-mode))
