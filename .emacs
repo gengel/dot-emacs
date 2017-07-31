@@ -15,12 +15,11 @@
 (when (>= emacs-major-version 24)
   (require 'package)
   (package-initialize)
-  ;(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+  ;(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
   (add-to-list 'package-archives
-               '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
+               '("melpa-stable" . "http://stable.melpa.org/packages/") t)
 
-  (add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/"))
+  ;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
   )
 
 ;(set-variable 'package-archives '())
@@ -215,6 +214,7 @@
 
 (global-set-key (kbd "C-c r") 'revert-buffer)
 (global-set-key (kbd "C-c g") 'delete-completion-window-buffer)
+(global-set-key (kbd "C-<tab>") 'delete-completion-window-buffer)
 
 
 (customize-set-variable 'standard-indent 8)
@@ -317,3 +317,8 @@
 
 ;;Fireplace
 (load "~/.emacs.d/fireplace")
+
+
+(with-eval-after-load 'rjsx
+  (define-key rjsx-mode-map "<" nil)
+  (define-key rjsx-mode-map (kbd "C-d") nil))
