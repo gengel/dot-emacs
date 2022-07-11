@@ -15,7 +15,7 @@
 (when (>= emacs-major-version 24)
   (require 'package)
   (package-initialize)
-  ;(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
   (add-to-list 'package-archives
                '("melpa-stable" . "http://stable.melpa.org/packages/") t)
 
@@ -45,32 +45,32 @@
 
 
 ;; Check style of Java files.
-(require 'flymake)
-(add-hook 'find-file-hook 'flymake-find-file-hook)
-(defun flymake-java-init ()
-  (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                     'flymake-create-temp-inplace))
-         (local-file (file-relative-name
-                      temp-file
-                      (file-name-directory buffer-file-name))))
-    (list "java"
-          (list "-cp"
-                (expand-file-name "~/misc/checkstyle-6.10.1-all.jar")
-                "com.puppycrawl.tools.checkstyle.Main"
-                "-c"
-                (expand-file-name "~/Projects/wp-java-checkstyle/src/main/resources/checkstyle.xml")
-                local-file))))
-(setq flymake-allowed-file-name-masks
-      (cons '(".+\\.java$"
-              flymake-java-init
-              flymake-simple-cleanup
-              flymake-get-real-file-name)
-            flymake-allowed-file-name-masks))
-(setq flymake-err-line-patterns
-      (cons '("\\(.*\\.java\\):\\([0-9]+\\):[0-9]+: \\(.+\\)" 1 2 nil 3)
-            flymake-err-line-patterns))
-;; Check *Message* buffer for errors. If you don't find any, you can remove this line.
-(setq flymake-log-level 3)
+;(require 'flymake)
+;; (add-hook 'find-file-hook 'flymake-find-file-hook)
+;; (defun flymake-java-init ()
+;;   (let* ((temp-file (flymake-init-create-temp-buffer-copy
+;;                      'flymake-create-temp-inplace))
+;;          (local-file (file-relative-name
+;;                       temp-file
+;;                       (file-name-directory buffer-file-name))))
+;;     (list "java"
+;;           (list "-cp"
+;;                 (expand-file-name "~/misc/checkstyle-6.10.1-all.jar")
+;;                 "com.puppycrawl.tools.checkstyle.Main"
+;;                 "-c"
+;;                 (expand-file-name "~/Projects/wp-java-checkstyle/src/main/resources/checkstyle.xml")
+;;                 local-file))))
+;; (setq flymake-allowed-file-name-masks
+;;       (cons '(".+\\.java$"
+;;               flymake-java-init
+;;               flymake-simple-cleanup
+;;               flymake-get-real-file-name)
+;;             flymake-allowed-file-name-masks))
+;; (setq flymake-err-line-patterns
+;;       (cons '("\\(.*\\.java\\):\\([0-9]+\\):[0-9]+: \\(.+\\)" 1 2 nil 3)
+;;             flymake-err-line-patterns))
+;; ;; Check *Message* buffer for errors. If you don't find any, you can remove this line.
+;; (setq flymake-log-level 3)
 
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -148,8 +148,12 @@
 ;; JavaScript
 (setq js-indent-level 2)
 (setq js2-basic-offset 2)
-;(require 'flymake-jslint)
-(add-hook 'js-mode-hook 'flymake-jslint-load)
+;; (load "~/.emacs.d/flymake-eslint")
+;; (add-hook 'js-mode-hook 'flymake-eslint-load)
+
+
+;; TypeScript
+(setq typescript-indent-level 2)
 
 ;; JSON
 
@@ -177,8 +181,8 @@
 
 ;; Clojure
 
-(require 'spinner)
-(require 'cider)
+;(require 'spinner)
+;(require 'cider)
 ;(require 'company)
 (require 'auto-complete)
 (require 'auto-complete-config)
@@ -232,23 +236,30 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(magit-push-arguments (quote ("--set-upstream"))))
+ '(magit-push-arguments (quote ("--set-upstream")))
+ '(org-babel-load-languages
+   (quote
+    ((emacs-lisp . t)
+     (sql . t)
+     (shell . t)
+     (clojure . t)
+     (python . t)
+     (js . t))))
+ '(package-selected-packages
+   (quote
+    (magit svelte-mode impatient-mode skewer-mode skewer-reload-stylesheets csv-mode ack mmm-mode ob-go ob-ipython ob-sql-mode org-babel-eval-in-repl go-mode flymake-go org-present eslint-fix slack yaml-mode websocket web-mode w3 vdiff simple-httpd scss-mode scala-mode2 rjsx-mode request perl6-mode pde oauth2 nodejs-repl nginx-mode markdown-mode+ json-mode js2-refactor imgix image+ handlebars-mode flymake-json flymake-jslint flymake-cursor expand-region exec-path-from-shell elein eimp dockerfile-mode clojure-snippets clojure-cheatsheet cljsbuild-mode clj-refactor alert ac-nrepl ac-cider))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t
-             (:inherit nil :stipple nil :background "Black" :foreground "White"
-                       :inverse-video nil :box nil :strike-through nil :overline nil
-                       :underline nil :slant normal :weight normal :height 120 :width normal
-                       :foundry "nil" :family "Menlo")))))
+ '(default ((t (:inherit nil :stipple nil :background "Black" :foreground "White" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "nil" :family "Menlo")))))
 
 
 
-(require 'ensime)
-(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
+;(require 'ensime)
+;(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 
 (add-to-list 'ac-dictionary-directories "~/.emacs.d//ac-dictionaries")
 (ac-config-default)
@@ -257,16 +268,16 @@
 
 (setq magit-last-seen-setup-instructions "1.4.0")
 (global-set-key (kbd "C-x g") 'magit-status)
-(require 'magit-gh-pulls)
-(add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls)
+;(require 'magit-gh-pulls)
+;(add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls)
 
-(require 'magit-gitflow)
-(add-hook 'magit-mode-hook 'turn-on-magit-gitflow)
+;(require 'magit-gitflow)
+;(add-hook 'magit-mode-hook 'turn-on-magit-gitflow)
 
 
-(require 'simple-httpd)
-(setq httpd-root "~/src/")
-(setq httpd-port 8000)
+;; (require 'simple-httpd)
+;; (setq httpd-root "~/src/")
+;; (setq httpd-port 8000)
 ;(httpd-start)
 
 
@@ -289,9 +300,9 @@
 (set-variable 'ac-ignore-case nil)
 
 
-(require 'eclim)
-(global-eclim-mode)
-(set-variable 'eclim-executable "/Applications/Eclipse.app/Contents/Eclipse/eclim")
+;; (require 'eclim)
+;; (global-eclim-mode)
+;; (set-variable 'eclim-executable "/Applications/Eclipse.app/Contents/Eclipse/eclim")
 
 (defun reverse-words (beg end)
   "Reverse the order of words in region."
@@ -312,13 +323,25 @@
 ;;YASNippets
 (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets/")
 
-(set-variable 'flymake-gui-warnings-enabled nil)
+;(set-variable 'flymake-gui-warnings-enabled nil)
 
 
 ;;Fireplace
-(load "~/.emacs.d/fireplace")
+;(load "~/.emacs.d/fireplace")
 
 
 (with-eval-after-load 'rjsx
   (define-key rjsx-mode-map "<" nil)
   (define-key rjsx-mode-map (kbd "C-d") nil))
+
+
+(setq python-shell-interpreter "/Library/Frameworks/Python.framework/Versions/3.5/bin/python3")
+
+(global-set-key (kbd "C-c l") 'linum-mode)
+
+;(add-hook 'flymake-mode-hook
+;           (lambda () (local-set-key (kbd "C-c n") 'flymake-goto-next-error)))
+
+
+;(load "~/.emacs.d/utf-32")
+;(require 'utf-32)
